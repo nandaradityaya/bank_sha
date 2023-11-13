@@ -1,4 +1,6 @@
 import 'package:bank_sha/shared/theme.dart';
+import 'package:bank_sha/ui/pages/sign_in_page.dart';
+import 'package:bank_sha/ui/widgets/button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +12,7 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
-  int currentIndex = 0; // default index carousel
+  int currentIndex = 0;
   CarouselController carouselController = CarouselController();
 
   List<String> title = [
@@ -54,11 +56,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 onPageChanged: (index, reason) {
                   setState(() {
                     currentIndex = index;
-                  }); // setState untuk mengubah state currentIndex
+                  });
                 },
               ),
-              carouselController:
-                  carouselController, // carousel controller untuk mengontrol carousel next
+              carouselController: carouselController,
             ),
             const SizedBox(
               height: 80,
@@ -96,30 +97,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   SizedBox(
                     height: currentIndex == 2 ? 38 : 50,
                   ),
-                  // jika currentIndex sama dengan 2 maka tampilkan button get started jika tidak maka tampilkan indicator
                   currentIndex == 2
                       ? Column(
                           children: [
-                            SizedBox(
-                              width: double.infinity,
-                              height: 50,
-                              child: TextButton(
-                                onPressed: () {
-                                  carouselController.nextPage();
-                                },
-                                style: TextButton.styleFrom(
-                                    backgroundColor: purpleColor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(56),
-                                    )),
-                                child: Text(
-                                  'Get Started',
-                                  style: whiteTextStyle.copyWith(
-                                    fontSize: 16,
-                                    fontWeight: semibold,
-                                  ),
-                                ),
-                              ),
+                            CustomFilledButton(
+                              title: 'Get Started',
+                              onPressed: () {},
                             ),
                             const SizedBox(
                               height: 20,
@@ -128,7 +111,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               width: double.infinity,
                               height: 24,
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const SignInPage(),
+                                    ),
+                                  );
+                                },
                                 style: TextButton.styleFrom(
                                   padding: EdgeInsets.zero,
                                 ),
@@ -150,9 +140,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               margin: const EdgeInsets.only(right: 10),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: currentIndex == 0
-                                    ? blueColor
-                                    : greyColor, // jika currentIndex sama dengan 0 maka warna biru jika tidak maka warna abu
+                                color:
+                                    currentIndex == 0 ? blueColor : greyColor,
                               ),
                             ),
                             Container(
@@ -176,27 +165,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               ),
                             ),
                             const Spacer(),
-                            SizedBox(
-                              width: 150,
+                            CustomFilledButton(
+                              title: 'Continue',
+                              onPressed: () {
+                                carouselController.nextPage();
+                              },
                               height: 50,
-                              child: TextButton(
-                                onPressed: () {
-                                  carouselController
-                                      .nextPage(); // next page for carousel
-                                },
-                                style: TextButton.styleFrom(
-                                    backgroundColor: purpleColor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(56),
-                                    )),
-                                child: Text(
-                                  'Continue',
-                                  style: whiteTextStyle.copyWith(
-                                    fontSize: 16,
-                                    fontWeight: semibold,
-                                  ),
-                                ),
-                              ),
+                              width: 150,
                             ),
                           ],
                         ),
