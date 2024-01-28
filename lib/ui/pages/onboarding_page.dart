@@ -1,5 +1,4 @@
 import 'package:bank_sha/shared/theme.dart';
-import 'package:bank_sha/ui/pages/sign_in_page.dart';
 import 'package:bank_sha/ui/widgets/button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +28,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightBackgroundColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -103,7 +101,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             CustomFilledButton(
                               title: 'Get Started',
                               onPressed: () {
-                                Navigator.pushNamed(context, '/sign-up');
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, '/sign-up', (route) => false);
                               },
                             ),
                             const SizedBox(
@@ -112,7 +111,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             CustomTextButton(
                               title: 'Sign In',
                               onPressed: () {
-                                Navigator.pushNamed(context, '/sign-in');
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, '/sign-in', (route) => false);
                               },
                             ),
                           ],

@@ -14,7 +14,7 @@ class CustomFilledButton extends StatelessWidget {
     // ini adalah parameter yang di butuhkan
     required this.title,
     this.width = double
-        .infinity, // boleh di isi atau ngga, kl ngga di isi maka akan mengambil nilai width sesuai dengan lebar parentnya
+        .infinity, // boleh di isi atau ngga, kl ngga di isi maka akan mengambil nilai width sesuai dengan lebar parentnya, double.infinity artinya selebar parentnya
     this.height = 50,
     this.onPressed,
   });
@@ -71,6 +71,41 @@ class CustomTextButton extends StatelessWidget {
           title,
           style: greyTextStyle.copyWith(
             fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class InputButtonPin extends StatelessWidget {
+  final String number;
+  final VoidCallback? onTap;
+
+  const InputButtonPin({
+    super.key,
+    required this.number,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: numberBackgroundColor,
+        ),
+        child: Center(
+          child: Text(
+            number,
+            style: whiteTextStyle.copyWith(
+              fontSize: 22,
+              fontWeight: semibold,
+            ),
           ),
         ),
       ),

@@ -6,7 +6,8 @@ class CustomFormField extends StatelessWidget {
   final String title;
   final double maginTextToBox;
   final String? hint;
-  final bool obscuretext;
+  final bool obscuretext; // untuk password
+  final bool isShowTitle;
   final TextEditingController?
       controller; // controller untuk mengambil value dari textformfield
 
@@ -15,8 +16,9 @@ class CustomFormField extends StatelessWidget {
     required this.title,
     this.maginTextToBox = 8,
     this.hint,
-    this.obscuretext = false,
+    this.obscuretext = false, // nilai defaultnya false namun bisa di ubah
     this.controller,
+    this.isShowTitle = true,
   });
 
   @override
@@ -24,12 +26,14 @@ class CustomFormField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: blackTextStyle.copyWith(
-            fontWeight: medium,
+        // kondisi tampilin label atau tidak
+        if (isShowTitle)
+          Text(
+            title,
+            style: blackTextStyle.copyWith(
+              fontWeight: medium,
+            ),
           ),
-        ),
         SizedBox(
           height: maginTextToBox,
         ),
