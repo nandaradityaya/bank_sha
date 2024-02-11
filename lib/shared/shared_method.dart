@@ -2,6 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:bank_sha/shared/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
 
 // bikin di folder shared agar reusable dan dapat digunakan di halaman mana pun
 void showCustomSnackbar(BuildContext context, String Message) {
@@ -25,4 +26,13 @@ String formatCurrency(
     symbol: symbol,
     decimalDigits: 0,
   ).format(number);
+}
+
+// function type XFile dibuat nullable. karna dia mau ambil gambar
+// pake Future karna ada async
+Future<XFile?> selectImage() async {
+  XFile? selectedImage =
+      await ImagePicker().pickImage(source: ImageSource.gallery);
+
+  return selectedImage;
 }

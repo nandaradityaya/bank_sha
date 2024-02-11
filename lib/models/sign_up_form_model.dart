@@ -15,7 +15,7 @@ class SignUpFormModel {
     this.ktp,
   });
 
-// ubah ke dalam bentuk json
+// ubah ke dalam bentuk json (namanya sesuaikan dengan postman)
   Map<String, dynamic> toJson() {
     return {
       'name': name,
@@ -27,6 +27,8 @@ class SignUpFormModel {
     };
   }
 
+// copyWith untuk mengcopy data sebelumnya yaitu nama email dan password, karna form pin, pp, dan ktp berada di halaman selanjutnya
+// ini dilakukan agar form yg sudah di isi nama email dan password tidak hilang ketika lanjut ke halaman pin pp dan ktp
   SignUpFormModel copyWith({
     String? name,
     String? email,

@@ -10,6 +10,7 @@ class CustomFormField extends StatelessWidget {
   final bool isShowTitle;
   final TextEditingController?
       controller; // controller untuk mengambil value dari textformfield
+  final TextInputType? keyboardType;
 
   const CustomFormField({
     super.key,
@@ -19,6 +20,7 @@ class CustomFormField extends StatelessWidget {
     this.obscuretext = false, // nilai defaultnya false namun bisa di ubah
     this.controller,
     this.isShowTitle = true,
+    this.keyboardType,
   });
 
   @override
@@ -40,6 +42,7 @@ class CustomFormField extends StatelessWidget {
         TextFormField(
           obscureText: obscuretext,
           controller: controller,
+          keyboardType: keyboardType,
           decoration: InputDecoration(
             hintText: hint,
             border: OutlineInputBorder(
