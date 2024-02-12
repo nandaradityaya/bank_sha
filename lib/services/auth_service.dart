@@ -1,6 +1,7 @@
 import 'dart:convert';
 // import 'package:bank_sha/models/signup_up_form.dart';
 // import 'package:bank_sha/models/user_model.dart';
+import 'package:bank_sha/models/sign_in_form_model.dart';
 import 'package:bank_sha/models/sign_up_form_model.dart';
 import 'package:bank_sha/models/user_model.dart';
 import 'package:bank_sha/shared/shared_values.dart';
@@ -57,33 +58,33 @@ class AuthService {
     }
   }
 
-  // Future<UserModel> login(SignInFormModel data) async {
-  //   try {
-  //     final res = await http.post(
-  //       Uri.parse('$baseUrl/login'),
-  //       body: data.toJson(),
-  //     );
+  Future<UserModel> login(SignInFormModel data) async {
+    try {
+      final res = await http.post(
+        Uri.parse('$baseUrl/login'),
+        body: data.toJson(),
+      );
 
-  //     print(res.body);
+      print(res.body);
 
-  //     if (res.statusCode == 200) {
-  //       UserModel user = UserModel.fromJson(jsonDecode(res.body));
-  //       user = user.copyWith(password: data.password);
+      if (res.statusCode == 200) {
+        UserModel user = UserModel.fromJson(jsonDecode(res.body));
+        user = user.copyWith(password: data.password);
 
-  //       // print('Btn login data2: ${user.password}');
+        // print('Btn login data2: ${user.password}');
 
-  //       // print('Btn login: ${user.}');
+        // print('Btn login: ${user.}');
 
-  //       await storeCredentialToLocal(user);
+        // await storeCredentialToLocal(user);
 
-  //       return user;
-  //     } else {
-  //       throw jsonDecode(res.body)['message'];
-  //     }
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
+        return user;
+      } else {
+        throw jsonDecode(res.body)['message'];
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   // Future<void> logOut() async {
   //   try {
