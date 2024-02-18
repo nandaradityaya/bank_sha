@@ -5,7 +5,7 @@ import 'package:bank_sha/models/sign_in_form_model.dart';
 import 'package:bank_sha/models/sign_up_form_model.dart';
 import 'package:bank_sha/models/user_model.dart';
 import 'package:bank_sha/shared/shared_values.dart';
-// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 // import '../models/signin_form_model.dart';
@@ -47,7 +47,7 @@ class AuthService {
             password: data
                 .password); // ambil passwordnya karna di res.body gada password
 
-        // await storeCredentialToLocal(user);
+        await storeCredentialToLocal(user);
 
         return user;
       } else {
@@ -75,7 +75,8 @@ class AuthService {
 
         // print('Btn login: ${user.}');
 
-        // await storeCredentialToLocal(user);
+        // masukin credentialnya ke local storage (session)
+        await storeCredentialToLocal(user);
 
         return user;
       } else {
@@ -86,74 +87,82 @@ class AuthService {
     }
   }
 
-  // Future<void> logOut() async {
-  //   try {
-  //     final token = await getToken();
+  Future<void> logOut() async {
+    try {
+      final token = await getToken();
 
-  //     final res = await http.post(
-  //       Uri.parse('$baseUrl/logout'),
-  //       headers: {
-  //         'Authorization': token,
-  //       },
-  //     );
+      final res = await http.post(
+        Uri.parse('$baseUrl/logout'),
+        headers: {
+          'Authorization': token,
+        },
+      );
 
-  //     if (res.statusCode == 200) {
-  //       await clearLocalStorage();
-  //     } else {
-  //       throw jsonDecode(res.body)['message'];
-  //     }
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
+      if (res.statusCode == 200) {
+        await clearLocalStorage();
+      } else {
+        throw jsonDecode(res.body)['message'];
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 
-  // Future<void> storeCredentialToLocal(UserModel user) async {
-  //   try {
-  //     const storage = FlutterSecureStorage();
-  //     // print('cek :${user.token}');
-  //     // print('cek :${user.email}');
-  //     // print('cek :${user.password}');
-  //     await storage.write(key: 'token', value: user.token);
-  //     await storage.write(key: 'email', value: user.email);
-  //     await storage.write(key: 'password', value: user.password);
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
+// untuk menyimpan session login
+  Future<void> storeCredentialToLocal(UserModel user) async {
+    try {
+      const storage = FlutterSecureStorage();
+      // print('cek :${user.token}');
+      // print('cek :${user.email}');
+      // print('cek :${user.password}');
 
-  // Future<SignInFormModel> getCredentialFromLocal() async {
-  //   try {
-  //     const storage = FlutterSecureStorage();
-  //     Map<String, String> value = await storage.readAll();
+      // write ke local storage
+      await storage.write(key: 'token', value: user.token);
+      await storage.write(key: 'email', value: user.email);
+      await storage.write(key: 'password', value: user.password);
+    } catch (e) {
+      rethrow;
+    }
+  }
 
-  //     if (value['email'] == null || value['password'] == null) {
-  //       throw 'authenticated';
-  //     } else {
-  //       final SignInFormModel data = SignInFormModel(
-  //         email: value['email'],
-  //         password: value['password'],
-  //       );
-  //       return data;
-  //     }
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
+  // ambil credential dari local
+  Future<SignInFormModel> getCredentialFromLocal() async {
+    try {
+      const storage = FlutterSecureStorage();
+      Map<String, String> value =
+          await storage.readAll(); // baca semua yg ada di storage
 
-  // Future<String> getToken() async {
-  //   String token = '';
-  //   const storage = FlutterSecureStorage();
-  //   String? value = await storage.read(key: 'token');
+      if (value['email'] == null || value['password'] == null) {
+        throw 'authenticated'; // tidak terauthenticated
+      } else {
+        final SignInFormModel data = SignInFormModel(
+          email: value['email'], // dapet dari value email
+          password: value['password'], // dapet dari value password
+        );
+        return data;
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 
-  //   if (value != null) {
-  //     token = 'Bearer $value';
-  //   }
+  // untuk mengambil token untuk di gunakan di beberapa halaman yg membutuhkan
+  Future<String> getToken() async {
+    String token = '';
+    const storage = FlutterSecureStorage();
+    String? value = await storage.read(key: 'token'); // read token doang
 
-  //   return token;
-  // }
+    // klo valuenya tidak sama dengan null maka tokennya munculin bearer
+    if (value != null) {
+      token = 'Bearer $value';
+    }
 
-  // Future<void> clearLocalStorage() async {
-  //   const storage = FlutterSecureStorage();
-  //   await storage.deleteAll();
-  // }
+    return token;
+  }
+
+  // clear local storage akan digunakan sewaktu logout
+  Future<void> clearLocalStorage() async {
+    const storage = FlutterSecureStorage();
+    await storage.deleteAll();
+  }
 }

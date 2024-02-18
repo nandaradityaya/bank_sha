@@ -1,7 +1,9 @@
+import 'package:bank_sha/blocs/auth/auth_bloc.dart';
 import 'package:bank_sha/shared/shared_method.dart';
 import 'package:bank_sha/shared/theme.dart';
 import 'package:bank_sha/ui/widgets/button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PinPage extends StatefulWidget {
   const PinPage({super.key});
@@ -14,6 +16,9 @@ class _PinPageState extends State<PinPage> {
   final TextEditingController pinController =
       TextEditingController(text: ''); // initial value
 
+  String pin = '';
+  bool isError = false; // set jika pin salah maka tulisan merah
+
   addPin(String number) {
     // jika panjang pin kurang dari 6 maka akan menambahkan angka, tapi klo udah ada 6 angka maka gabisa nambah lagi
     if (pinController.text.length < 6) {
@@ -24,9 +29,12 @@ class _PinPageState extends State<PinPage> {
 
     // cek pinnya sampe 6 karakter text
     if (pinController.text.length == 6) {
-      if (pinController.text == '123123') {
+      if (pinController.text == pin) {
         Navigator.pop(context, true); // kirim ke halaman yang di tuju
       } else {
+        setState(() {
+          isError = true; // set jika pin salah maka tulisan merah
+        });
         // tampilin package snackbar jika pin salah
         showCustomSnackbar(
           context,
@@ -40,9 +48,22 @@ class _PinPageState extends State<PinPage> {
     // jika pin tidak kosong maka sistem bisa utk menghapus 1 angka, tapi klo udah kosong maka gabisa dihapus lagi lahh!
     if (pinController.text.isNotEmpty) {
       setState(() {
+        isError = false;
         pinController.text =
             pinController.text.substring(0, pinController.text.length - 1);
       }); // delete last character | dari 0 sampai panjang karakter - 1, jadi karakter terakhir akan dihapus
+    }
+  }
+
+  // jalankan function initState ketika PinPage di jalankan
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final state = context.read<AuthBloc>().state;
+    if (state is AuthSuccess) {
+      pin = state
+          .user.pin!; // pake tanda seru agar memastikan bahwa pinnya tidak null
     }
   }
 
@@ -83,6 +104,7 @@ class _PinPageState extends State<PinPage> {
                     fontSize: 36,
                     fontWeight: medium,
                     letterSpacing: 16, // space between character
+                    color: isError ? redColor : whiteColor,
                   ),
                   decoration: InputDecoration(
                     disabledBorder: UnderlineInputBorder(
