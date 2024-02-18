@@ -89,12 +89,13 @@ class AuthService {
 
   Future<void> logOut() async {
     try {
+      // ambil tokennya
       final token = await getToken();
 
       final res = await http.post(
         Uri.parse('$baseUrl/logout'),
         headers: {
-          'Authorization': token,
+          'Authorization': token, // Auth ambil tokennya
         },
       );
 

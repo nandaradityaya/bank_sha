@@ -47,7 +47,7 @@ class AuthUpdatePin extends AuthEvent {
   List<Object> get props => [oldPin, newPin];
 }
 
-// class AuthLogOut extends AuthEvent {}
+class AuthLogOut extends AuthEvent {}
 
 // class AuthUpdateBalance extends AuthEvent {
 //   final int amount;
