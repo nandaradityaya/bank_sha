@@ -48,6 +48,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       ),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
+          // jalankan listener ketika user klik Update Now
           if (state is AuthFailed) {
             showCustomSnackbar(context, state.e);
           }

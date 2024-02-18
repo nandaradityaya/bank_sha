@@ -8,6 +8,7 @@ import 'package:bank_sha/models/user_edit_form_model.dart';
 import 'package:bank_sha/models/user_model.dart';
 import 'package:bank_sha/services/auth_service.dart';
 import 'package:bank_sha/services/user_service.dart';
+import 'package:bank_sha/services/wallet_service.dart';
 // import 'package:bank_sha/services/user_service.dart';
 // import 'package:bank_sha/services/wallet_service.dart';
 // ignore: depend_on_referenced_packages
@@ -83,7 +84,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           // pastiin si statenya itu AuthSuccess baru kita bisa update usernya
           if (state is AuthSuccess) {
             final updatadUser = (state as AuthSuccess).user.copyWith(
-                  // ubah semua yg ada di sini, ini berdasarkan dari user edit form model
+                  // ubah semua yg ada di sini yg di masukin user, data ini berdasarkan dari user edit form model
                   username: event.data.username,
                   name: event.data.name,
                   email: event.data.email,
@@ -92,7 +93,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
             emit(AuthLoading());
 
-            // jalanin updateUser yg di dapet dari event.data
+            // jalanin updateUser yg di dapet dari event.data (data itu berarti data yg ada di model)
             await UserService().updateUser(event.data);
 
             emit(AuthSuccess(updatadUser));
@@ -102,22 +103,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       }
 
-      // if (event is AuthUpdatePin) {
-      //   try {
-      //     if (state is AuthSuccess) {
-      //       final updatadUser = (state as AuthSuccess).user.copyWith(
-      //             pin: event.newPin,
-      //           );
-      //       emit(AuthLoading());
+      if (event is AuthUpdatePin) {
+        try {
+          if (state is AuthSuccess) {
+            final updatadUser = (state as AuthSuccess).user.copyWith(
+                  // ambil newPinnya, jangan oldPin!!! karna yg mau kita update newPin
+                  pin: event.newPin,
+                );
+            emit(AuthLoading());
 
-      //       await WalletService().updatePin(event.oldPin, event.newPin);
+            await WalletService().updatePin(event.oldPin, event.newPin);
 
-      //       emit(AuthSuccess(updatadUser));
-      //     }
-      //   } catch (e) {
-      //     emit(AuthFailed(e.toString()));
-      //   }
-      // }
+            emit(AuthSuccess(updatadUser));
+          }
+        } catch (e) {
+          emit(AuthFailed(e.toString()));
+        }
+      }
 
       // if (event is AuthLogOut) {
       //   try {
