@@ -1,17 +1,16 @@
+import 'package:bank_sha/models/payment_method_model.dart';
 import 'package:bank_sha/shared/theme.dart';
 import 'package:flutter/material.dart';
 
 class TopupBankItem extends StatelessWidget {
-  final String iconUrl;
-  final String nameBank;
-  final String duration;
+  final PaymentMethodModel paymentMethod;
+  // final String duration;
   final bool isSelected;
 
   const TopupBankItem({
     super.key,
-    required this.iconUrl,
-    required this.nameBank,
-    required this.duration,
+    required this.paymentMethod,
+    // required this.duration,
     this.isSelected = false,
   });
 
@@ -38,8 +37,8 @@ class TopupBankItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset(
-              iconUrl,
+            Image.network(
+              paymentMethod.thumbnail.toString(),
               width: 96,
               height: 30,
             ),
@@ -47,14 +46,14 @@ class TopupBankItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  nameBank,
+                  paymentMethod.name.toString(),
                   style: blackTextStyle.copyWith(
                     fontSize: 16,
                     fontWeight: medium,
                   ),
                 ),
                 Text(
-                  duration,
+                  "50 Min",
                   style: greyTextStyle.copyWith(
                     fontSize: 12,
                   ),
