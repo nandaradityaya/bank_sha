@@ -133,15 +133,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       }
 
-      // if (event is AuthUpdateBalance) {
-      //   if (state is AuthSuccess) {
-      //     final currentUser = (state as AuthSuccess).user;
-      //     final updatadUser = currentUser.copyWith(
-      //       balance: currentUser.balance! + event.amount,
-      //     );
-      //     emit(AuthSuccess(updatadUser));
-      //   }
-      // }
+      // update balance
+      if (event is AuthUpdateBalance) {
+        if (state is AuthSuccess) {
+          // ambil currentUser dulu
+          final currentUser = (state as AuthSuccess).user;
+
+          final updatadUser = currentUser.copyWith(
+            // balance sebelumnya tambahin dengan event.amount (yg di top up oleh user)
+            balance: currentUser.balance! + event.amount,
+          );
+          emit(AuthSuccess(updatadUser));
+        }
+      }
     });
   }
 }
