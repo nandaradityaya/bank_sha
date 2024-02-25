@@ -16,7 +16,7 @@ class TransferSearchUserItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 155,
-      height: 173,
+      height: 188,
       padding: const EdgeInsets.symmetric(
         horizontal: 14,
         vertical: 22,

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 // import 'package:bank_sha/models/data_plan_model.dart';
 import 'package:bank_sha/models/topup_form_model.dart';
+import 'package:bank_sha/models/transfer_form_model.dart';
 // import 'package:bank_sha/models/transaction_model.dart';
 import 'package:bank_sha/services/auth_service.dart';
 import 'package:bank_sha/shared/shared_values.dart';
@@ -35,25 +36,27 @@ class TransactionService {
     }
   }
 
-  // Future<void> transfer(TransferFormModel data) async {
-  //   try {
-  //     final token = await AuthService().getToken();
+// pake future void karena returnnya ga mengembalikan apapun (cuma massage success) | (liat postman)
+// jadi kasih aja message error
+  Future<void> transfer(TransferFormModel data) async {
+    try {
+      final token = await AuthService().getToken();
 
-  //     final res = await http.post(
-  //       Uri.parse('$baseUrl/transfers'),
-  //       headers: {
-  //         'Authorization': token,
-  //       },
-  //       body: data.toJson(),
-  //     );
+      final res = await http.post(
+        Uri.parse('$baseUrl/transfers'),
+        headers: {
+          'Authorization': token,
+        },
+        body: data.toJson(),
+      );
 
-  //     if (res.statusCode != 200) {
-  //       throw jsonDecode(res.body)['message'];
-  //     }
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
+      if (res.statusCode != 200) {
+        throw jsonDecode(res.body)['message'];
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   // Future<void> dataPlan(DataPlanFormModel data) async {
   //   try {
