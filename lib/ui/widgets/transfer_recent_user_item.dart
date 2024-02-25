@@ -1,21 +1,11 @@
+import 'package:bank_sha/models/user_model.dart';
 import 'package:bank_sha/shared/theme.dart';
 import 'package:flutter/material.dart';
 
 class TransferRecentUserItem extends StatelessWidget {
-  final String imageUrl;
-  final String name;
-  final String username;
-  final bool isVerified;
-  final bool isSelected;
+  final UserModel user;
 
-  const TransferRecentUserItem({
-    super.key,
-    required this.imageUrl,
-    required this.name,
-    required this.username,
-    this.isVerified = false,
-    this.isSelected = false,
-  });
+  const TransferRecentUserItem({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -30,57 +20,73 @@ class TransferRecentUserItem extends StatelessWidget {
         color: whiteColor,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isSelected ? blueColor : whiteColor,
+          // color: isSelected ? blueColor : whiteColor,
+          color: whiteColor,
           width: 2,
         ),
       ),
       child: Row(
         children: [
-          Image.asset(
-            imageUrl,
+          Container(
             width: 45,
             height: 45,
-          ),
-          const SizedBox(
-            width: 14,
+            margin: const EdgeInsets.only(
+              right: 14,
+            ),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image:
+                    user.profilePicture == null || user.profilePicture!.isEmpty
+                        ? const AssetImage(
+                            'assets/img_profile.png',
+                          )
+                        : NetworkImage(user.profilePicture!) as ImageProvider,
+              ),
+            ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                name,
+                user.name.toString(),
                 style: blackTextStyle.copyWith(
                   fontSize: 16,
                   fontWeight: medium,
                 ),
               ),
+              const SizedBox(
+                height: 2,
+              ),
               Text(
-                '@$username',
+                '@${user.username}',
                 style: greyTextStyle.copyWith(
                   fontSize: 12,
                 ),
-              )
+              ),
             ],
           ),
           const Spacer(),
-          if (isVerified)
-            Center(
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.check_circle,
-                    color: greenColor,
-                    size: 14,
+          // jika verified == 1 maka tampilin badge verified
+          if (user.verified == 1)
+            Row(
+              children: [
+                Icon(
+                  Icons.check_circle,
+                  size: 14,
+                  color: greenColor,
+                ),
+                const SizedBox(
+                  width: 4,
+                ),
+                Text(
+                  'Verified',
+                  style: greenTextStyle.copyWith(
+                    fontSize: 11,
+                    fontWeight: medium,
                   ),
-                  Text(
-                    'Verified',
-                    style: greenTextStyle.copyWith(
-                      fontSize: 11,
-                      fontWeight: medium,
-                    ),
-                  )
-                ],
-              ),
+                ),
+              ],
             ),
         ],
       ),

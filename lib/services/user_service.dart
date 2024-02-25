@@ -32,15 +32,18 @@ class UserService {
 
   Future<List<UserModel>> getRecentUser() async {
     try {
+      // ambil tokennya karna butuh token
       final token = await AuthService().getToken();
       final res = await http.get(
         Uri.parse('$baseUrl/transfer_histories'),
+        // isi headersnya dengan authorization token yg ada
         headers: {
           'Authorization': token,
         },
       );
 
       if (res.statusCode == 200) {
+        // list of UserModel from jsonDecode res.body, ambil data yg ada di json lalu map ke dalam user lalu return UserModel.fromJson(ganti jadi user)
         return List<UserModel>.from(
           jsonDecode(res.body)['data'].map(
             (user) => UserModel.fromJson(user),
@@ -54,7 +57,7 @@ class UserService {
     }
   }
 
-  Future<List<UserModel>> getUserByUsername(String username) async {
+  Future<List<UserModel>> getUsersByUsername(String username) async {
     try {
       final token = await AuthService().getToken();
       final res = await http.get(

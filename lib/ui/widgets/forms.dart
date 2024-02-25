@@ -11,6 +11,8 @@ class CustomFormField extends StatelessWidget {
   final TextEditingController?
       controller; // controller untuk mengambil value dari textformfield
   final TextInputType? keyboardType;
+  final Function(String)?
+      onFieldSubmitted; // fungsi ini adalah untuk ketika melakukan submit dia akan melakukan listener
 
   const CustomFormField({
     super.key,
@@ -21,6 +23,7 @@ class CustomFormField extends StatelessWidget {
     this.controller,
     this.isShowTitle = true,
     this.keyboardType,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -50,6 +53,7 @@ class CustomFormField extends StatelessWidget {
             ),
             contentPadding: const EdgeInsets.all(12),
           ),
+          onFieldSubmitted: onFieldSubmitted,
         ),
       ],
     );
