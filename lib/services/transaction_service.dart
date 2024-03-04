@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 // import 'package:bank_sha/models/data_plan_model.dart';
+import 'package:bank_sha/models/data_plan_form_model.dart';
 import 'package:bank_sha/models/topup_form_model.dart';
 import 'package:bank_sha/models/transfer_form_model.dart';
 // import 'package:bank_sha/models/transaction_model.dart';
@@ -58,25 +59,25 @@ class TransactionService {
     }
   }
 
-  // Future<void> dataPlan(DataPlanFormModel data) async {
-  //   try {
-  //     final token = await AuthService().getToken();
+  Future<void> dataPlan(DataPlanFormModel data) async {
+    try {
+      final token = await AuthService().getToken();
 
-  //     final res = await http.post(
-  //       Uri.parse('$baseUrl/data_plans'),
-  //       headers: {
-  //         'Authorization': token,
-  //       },
-  //       body: data.toJson(),
-  //     );
+      final res = await http.post(
+        Uri.parse('$baseUrl/data_plans'),
+        headers: {
+          'Authorization': token,
+        },
+        body: data.toJson(),
+      );
 
-  //     if (res.statusCode != 200) {
-  //       throw jsonDecode(res.body)['message'];
-  //     }
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
+      if (res.statusCode != 200) {
+        throw jsonDecode(res.body)['message'];
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   // Future<List<TransactionModel>> getTransaction() async {
   //   try {

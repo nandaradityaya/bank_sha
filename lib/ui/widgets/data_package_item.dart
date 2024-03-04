@@ -1,17 +1,20 @@
+import 'package:bank_sha/models/data_plan_model.dart';
 import 'package:bank_sha/shared/theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/shared_method.dart';
 
 class DataPackageItem extends StatelessWidget {
-  final int amount;
-  final int price;
+  // final int amount;
+  // final int price;
+  final DataPlanModel dataPlan;
   final bool isSelected;
 
-  const DataPackageItem({
+  DataPackageItem({
     super.key,
-    required this.amount,
-    required this.price,
+    // required this.amount,
+    // required this.price,
+    required this.dataPlan,
     this.isSelected = false,
   });
 
@@ -37,7 +40,7 @@ class DataPackageItem extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            '${amount}GB',
+            dataPlan.name.toString(),
             style: blackTextStyle.copyWith(
               fontSize: 32,
               fontWeight: medium,
@@ -47,7 +50,8 @@ class DataPackageItem extends StatelessWidget {
             height: 6,
           ),
           Text(
-            formatCurrency(price),
+            // default valuenya klo gaada itu 0
+            formatCurrency(dataPlan.price ?? 0),
             style: greyTextStyle.copyWith(
               fontSize: 12,
             ),
