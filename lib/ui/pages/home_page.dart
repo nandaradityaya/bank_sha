@@ -1,6 +1,11 @@
 import 'package:bank_sha/blocs/auth/auth_bloc.dart';
+import 'package:bank_sha/blocs/tip/tip_bloc.dart';
+import 'package:bank_sha/blocs/transaction/transaction_bloc.dart';
+import 'package:bank_sha/blocs/user/user_bloc.dart';
+import 'package:bank_sha/models/transfer_form_model.dart';
 import 'package:bank_sha/shared/shared_method.dart';
 import 'package:bank_sha/shared/theme.dart';
+import 'package:bank_sha/ui/pages/transfer_amount_page.dart';
 import 'package:bank_sha/ui/widgets/home_latest_transaction_item.dart';
 import 'package:bank_sha/ui/widgets/home_service_item.dart';
 import 'package:bank_sha/ui/widgets/home_tips_item.dart';
@@ -389,21 +394,24 @@ class HomePage extends StatelessWidget {
               color: whiteColor,
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Column(
-              children: [
-                HomeLatestTransactionItem(
-                  iconUrl: 'assets/ic_transaction_cat1.png',
-                  title: 'Top Up',
-                  time: 'Yesterday',
-                  value: '+ ${formatCurrency(450000, symbol: '')}',
-                ),
-                HomeLatestTransactionItem(
-                  iconUrl: 'assets/ic_transaction_cat2.png',
-                  title: 'Cashback',
-                  time: 'Sep 11',
-                  value: '+ ${formatCurrency(22000, symbol: '')}',
-                ),
-              ],
+            child: BlocProvider(
+              create: (context) => TransactionBloc()..add(TransactionGet()),
+              child: BlocBuilder<TransactionBloc, TransactionState>(
+                builder: (context, state) {
+                  if (state is TransactionSuccess) {
+                    return Column(
+                      children: state.transaction.map((transaction) {
+                        return HomeLatestTransactionItem(
+                            transaction: transaction);
+                      }).toList(),
+                    );
+                  }
+
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
             ),
           ),
         ],
@@ -429,27 +437,39 @@ class HomePage extends StatelessWidget {
           const SizedBox(
             height: 14,
           ),
-          const SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                HomeUserItem(
-                  imageUrl: 'assets/img_friend1.png',
-                  username: 'yuanita',
-                ),
-                HomeUserItem(
-                  imageUrl: 'assets/img_friend2.png',
-                  username: 'jani',
-                ),
-                HomeUserItem(
-                  imageUrl: 'assets/img_friend3.png',
-                  username: 'urip',
-                ),
-                HomeUserItem(
-                  imageUrl: 'assets/img_friend4.png',
-                  username: 'masa',
-                ),
-              ],
+          BlocProvider(
+            create: (context) => UserBloc()..add(UserGetRecent()),
+            child: BlocBuilder<UserBloc, UserState>(
+              builder: (context, state) {
+                if (state is UserSuccess) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: state.users.map((user) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TransferAmountPage(
+                                    data: TransferFormModel(
+                                      // kirim ke username yg di pilih
+                                      sendTo: user.username,
+                                    ),
+                                  ),
+                                ));
+                          },
+                          child: HomeUserItem(user: user),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                }
+
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
             ),
           ),
         ],
@@ -477,31 +497,25 @@ class HomePage extends StatelessWidget {
             height: 14,
           ),
           // wrap untuk membuat item berada dalam satu baris
-          const Wrap(
-            spacing: 17, // jarak antar item kanan kiri
-            runSpacing: 18, // jarak antar item atas bawah
-            children: [
-              HomeTipsItem(
-                imgUrl: 'assets/img_tips1.png',
-                title: 'Best tips for using a credit card',
-                url: 'https:/www.google.com',
-              ),
-              HomeTipsItem(
-                imgUrl: 'assets/img_tips2.png',
-                title: 'Spot the good pie of finance model',
-                url: 'https:/www.google.com',
-              ),
-              HomeTipsItem(
-                imgUrl: 'assets/img_tips3.png',
-                title: 'Great hack to get better advices',
-                url: 'https:/www.google.com',
-              ),
-              HomeTipsItem(
-                imgUrl: 'assets/img_tips4.png',
-                title: 'Save more penny buy this instead',
-                url: 'https:/www.google.com',
-              ),
-            ],
+          BlocProvider(
+            create: (context) => TipBloc()..add(TipGet()),
+            child: BlocBuilder<TipBloc, TipState>(
+              builder: (context, state) {
+                if (state is TipSuccess) {
+                  return Wrap(
+                    spacing: 17, // jarak antar item kanan kiri
+                    runSpacing: 18, // jarak antar item atas bawah
+                    children: state.tips.map((tip) {
+                      return HomeTipsItem(tip: tip);
+                    }).toList(),
+                  );
+                }
+
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+            ),
           ),
         ],
       ),

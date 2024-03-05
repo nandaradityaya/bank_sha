@@ -1,10 +1,9 @@
 import 'dart:convert';
 
-// import 'package:bank_sha/models/data_plan_model.dart';
 import 'package:bank_sha/models/data_plan_form_model.dart';
 import 'package:bank_sha/models/topup_form_model.dart';
 import 'package:bank_sha/models/transfer_form_model.dart';
-// import 'package:bank_sha/models/transaction_model.dart';
+import 'package:bank_sha/models/transaction_model.dart';
 import 'package:bank_sha/services/auth_service.dart';
 import 'package:bank_sha/shared/shared_values.dart';
 import 'package:http/http.dart' as http;
@@ -79,28 +78,29 @@ class TransactionService {
     }
   }
 
-  // Future<List<TransactionModel>> getTransaction() async {
-  //   try {
-  //     final token = await AuthService().getToken();
+  Future<List<TransactionModel>> getTransaction() async {
+    try {
+      final token = await AuthService().getToken();
 
-  //     final res = await http.get(
-  //       Uri.parse('$baseUrl/transactions'),
-  //       headers: {
-  //         'Authorization': token,
-  //       },
-  //     );
+      final res = await http.get(
+        Uri.parse('$baseUrl/transactions'),
+        headers: {
+          'Authorization': token,
+        },
+      );
 
-  //     // print(res.body);
+      // print(res.body);
 
-  //     if (res.statusCode == 200) {
-  //       return List<TransactionModel>.from(jsonDecode(res.body)['data']
-  //               .map((transaction) => TransactionModel.fromJson(transaction)))
-  //           .toList();
-  //     }
+      if (res.statusCode == 200) {
+        return List<TransactionModel>.from(jsonDecode(res.body)[
+                'data'] // panggil data karna di postman dia berada di field data
+            .map((transaction) =>
+                TransactionModel.fromJson(transaction))).toList();
+      }
 
-  //     throw jsonDecode(res.body)['message'];
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
+      throw jsonDecode(res.body)['message'];
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
